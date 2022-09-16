@@ -12,7 +12,7 @@ public class CharacterMover2D : MonoBehaviour, CharacterMover
 
 	public void Move(Vector3 movement)
 	{
-		body.MovePosition(movement);
+		body.MovePosition(transform.position + movement);
 	}
 
 	private void Awake()
