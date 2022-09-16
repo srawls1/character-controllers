@@ -2,7 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.Events;
 
-[RequireComponent(typeof(CharacterController), typeof(Animator), typeof(RelativeTime))]
+[RequireComponent(typeof(Animator), typeof(RelativeTime))]
 public class MyCharacterController : MonoBehaviour
 {
 	#region Editor Fields
@@ -34,14 +34,6 @@ public class MyCharacterController : MonoBehaviour
 	[Tooltip("Called upon landing on the ground. Intended for sound queues, particle effects, etc.")]
 	[SerializeField] private UnityEvent onLand;
 
-	[Header("Player Grounded")]
-	[SerializeField] private float groundedOffset = 0.14f;
-
-	[Tooltip("The radius of the grounded check. Should match the radius of the CharacterController")]
-	[SerializeField] private float groundedRadius = 0.28f;
-	[Tooltip("What layers the character uses as ground")]
-	[SerializeField] private LayerMask groundLayers;
-
 	#endregion // Editor Fields
 
 	#region Swizzlin
@@ -51,6 +43,7 @@ public class MyCharacterController : MonoBehaviour
 		X, Y, Z, None
 	}
 
+	[Header("Swizzling")]
 	[SerializeField] private MovementAxis horizontalAxis1 = MovementAxis.X;
 	[SerializeField] private MovementAxis horizontalAxis2 = MovementAxis.Z;
 	[SerializeField] private MovementAxis verticalAxis = MovementAxis.Y;
@@ -88,7 +81,8 @@ public class MyCharacterController : MonoBehaviour
 	private PlayerInputProxy inputProxy;
 	private RelativeTime relativeTime;
 	private Animator animator;
-	private CharacterController controller;
+	private CharacterMover mover;
+	private GroundChecker groundChecker;
 	private GameObject mainCamera;
 
 	#endregion // Private Fields
@@ -200,22 +194,11 @@ public class MyCharacterController : MonoBehaviour
 	{
 		VerticalUpdate();
 		HorizontalUpdate();
-		controller.Move(velocity * relativeTime.fixedDeltaTime);
+		mover.Move(velocity * relativeTime.fixedDeltaTime);
 	}
 
 	private void OnDrawGizmosSelected()
 	{
-		Color transparentGreen = new Color(0.0f, 1.0f, 0.0f, 0.35f);
-		Color transparentRed = new Color(1.0f, 0.0f, 0.0f, 0.35f);
-
-		if (grounded) Gizmos.color = transparentGreen;
-		else Gizmos.color = transparentRed;
-
-		// when selected, draw a gizmo in the position of, and matching radius of, the grounded collider
-		Gizmos.DrawSphere(
-			new Vector3(transform.position.x, transform.position.y - groundedOffset, transform.position.z),
-			groundedRadius);
-
 		Gizmos.color = Color.white;
 		Gizmos.DrawRay(transform.position, transform.forward);
 	}
@@ -234,7 +217,8 @@ public class MyCharacterController : MonoBehaviour
 	{
 		inputProxy = GetComponent<PlayerInputProxy>();
 		animator = GetComponent<Animator>();
-		controller = GetComponent<CharacterController>();
+		mover = GetComponent<CharacterMover>();
+		groundChecker = GetComponent<GroundChecker>();
 		relativeTime = GetComponent<RelativeTime>();
 		mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
 	}
@@ -282,9 +266,7 @@ public class MyCharacterController : MonoBehaviour
 
 	private void VerticalUpdate()
 	{
-		Vector3 spherePosition = transform.position + Vector3.down * groundedOffset;
-		grounded = Physics.CheckSphere(spherePosition, groundedRadius, groundLayers,
-			QueryTriggerInteraction.Ignore);
+		grounded = groundChecker.IsGrounded();
 
 		float deltaTime = relativeTime.fixedDeltaTime;
 
