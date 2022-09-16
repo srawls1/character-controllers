@@ -3,7 +3,7 @@
     "version": "1.0.0",
     "author": "Spencer Rawls",
     "description": "A good, reusable character controller for 2D or 3D games",
-    "displayName": "My Package",
+    "displayName": "Character Controller",
     "unity": "2021.3",
     "dependencies": {}
 }
