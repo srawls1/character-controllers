@@ -1,0 +1,17 @@
+{
+    "name": "com.srawls1.character-controller",
+    "rootNamespace": "",
+    "references": [
+        "GUID:027f1933c56ca5b41936f9e88442a2c1",
+        "GUID:75469ad4d38634e559750d17036d5f7c"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
