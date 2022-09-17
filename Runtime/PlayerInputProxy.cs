@@ -44,4 +44,5 @@ public abstract class PlayerInputProxy : MonoBehaviour
 
     public abstract bool JumpHeld();
     public abstract Vector2 Movement();
+    public abstract Vector2 Look();
 }

@@ -8,6 +8,7 @@ public class InputSystemPlayerInputProxy : PlayerInputProxy
 {
 	private bool jumpHeld;
 	private Vector2 movement;
+	private Vector2 look;
 
 	public void OnJump(InputValue value)
 	{
@@ -28,6 +29,11 @@ public class InputSystemPlayerInputProxy : PlayerInputProxy
 		movement = value.Get<Vector2>();
 	}
 
+	public void OnLook(InputValue value)
+	{
+		look = value.Get<Vector2>();
+	}
+
 	public override bool JumpHeld()
 	{
 		return jumpHeld;
@@ -36,6 +42,11 @@ public class InputSystemPlayerInputProxy : PlayerInputProxy
 	public override Vector2 Movement()
 	{
 		return movement;
+	}
+
+	public override Vector2 Look()
+	{
+		return look;
 	}
 }
 
