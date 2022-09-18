@@ -9,6 +9,8 @@ public class MyCharacterController : MonoBehaviour
 
 	[Header("Movement")]
 	[SerializeField] private float maxSpeed = 6f;
+	[SerializeField] private float maxStrafeSpeed = 4f;
+	[SerializeField] private float maxBackupSpeed = 3f;
 	[SerializeField] private float timeToFullSpeed = 0.2f;
 	[SerializeField] private float timeToStop = 0.1f;
 	[SerializeField] private float orthogonalAccelerationTime = 0.5f;
@@ -396,12 +398,15 @@ public class MyCharacterController : MonoBehaviour
 			input.Normalize();
 		}
 
-		input *= maxSpeed;
-
 		Vector3 cameraRight = mainCamera.transform.right;
 		Vector3 cameraForward = Vector3.Cross(cameraRight, Vector3.up);
-		Vector3 targetVel3D = (cameraRight * input.x) + (cameraForward * input.y);
+		Vector3 input3D = (cameraRight * input.x) + (cameraForward * input.y);
 
+		Vector3 forwardComponent = Vector3.Project(input3D, transform.forward);
+		Vector3 sidewaysComponent = input3D - forwardComponent;
+
+		float forwardSpeed = Vector3.Dot(forwardComponent, transform.forward) > 0 ? maxSpeed : maxBackupSpeed;
+		Vector3 targetVel3D = forwardComponent * forwardSpeed + sidewaysComponent * maxStrafeSpeed;
 		return new Vector2(targetVel3D.x, targetVel3D.z);
 	}
 
