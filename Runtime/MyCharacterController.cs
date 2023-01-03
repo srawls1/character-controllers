@@ -54,7 +54,6 @@ public class MyCharacterController : MonoBehaviour
 
 	#region Private Fields
 
-	private float animationBlend = 0f;
 	private float rotationVelocity = 0f;
 	private float currentGravity;
 
@@ -74,11 +73,11 @@ public class MyCharacterController : MonoBehaviour
 	private float fallTimeoutDelta;
 	private float coyoteTimeDelta;
 
-	private int animIDSpeed;
+	private int animIDForwardSpeed;
+	private int animIDStrafeSpeed;
 	private int animIDGrounded;
 	private int animIDJump;
 	private int animIDFreeFall;
-	private int animIDMotionSpeed;
 
 	private PlayerInputProxy inputProxy;
 	private RelativeTime relativeTime;
@@ -227,11 +226,11 @@ public class MyCharacterController : MonoBehaviour
 
 	private void AssignAnimationIDs()
 	{
-		animIDSpeed = Animator.StringToHash("Speed");
+		animIDForwardSpeed = Animator.StringToHash("ForwardSpeed");
+		animIDStrafeSpeed = Animator.StringToHash("StrafeSpeed");
 		animIDGrounded = Animator.StringToHash("Grounded");
 		animIDJump = Animator.StringToHash("Jump");
 		animIDFreeFall = Animator.StringToHash("FreeFall");
-		animIDMotionSpeed = Animator.StringToHash("MotionSpeed");
 	}
 
 	private void DeriveMovementParameters()
@@ -354,8 +353,6 @@ public class MyCharacterController : MonoBehaviour
 			Vector2.MoveTowards(Vector2.zero, orthogonalDiff, orthogonalSpeedChangeRate * relativeTime.fixedDeltaTime);
 		currentVelocity += delta;
 
-		animationBlend = currentVelocity.magnitude;
-
 		if (autoRotation && targetVelocity != Vector2.zero)
 		{
 			targetRotation = Mathf.Atan2(targetVelocity.x, targetVelocity.y) * Mathf.Rad2Deg;
@@ -367,8 +364,8 @@ public class MyCharacterController : MonoBehaviour
 
 		horizontalVelocity = currentVelocity;
 
-		animator.SetFloat(animIDSpeed, animationBlend);
-		animator.SetFloat(animIDMotionSpeed, currentVelocity.magnitude / maxSpeed);
+		animator.SetFloat(animIDForwardSpeed, Vector3.Dot(currentVelocity, transform.forward) / maxSpeed);
+		animator.SetFloat(animIDStrafeSpeed, Vector3.Dot(currentVelocity, transform.right) / maxStrafeSpeed);
 	}
 
 	private void DoAJump(float speed)
