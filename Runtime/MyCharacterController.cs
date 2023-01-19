@@ -27,7 +27,7 @@ public class MyCharacterController : MonoBehaviour
 	[SerializeField] private float midairOrthogonalAccelerationTime = 2f;
 	[SerializeField] private float coyoteTime = 0.2f;
 	[SerializeField] private float maxAirJumpHeight = 3f;
-	[SerializeField] private int numAirJumps = 0;
+	[SerializeField] private int m_numAirJumps = 0;
 	[SerializeField] private float fallTimeout = 0.15f;
 	[SerializeField] private float terminalVelocity = 53.0f;
 
@@ -177,6 +177,15 @@ public class MyCharacterController : MonoBehaviour
 	public float targetRotation
 	{
 		get; set;
+	}
+
+	public int numAirJumps
+	{
+		get { return m_numAirJumps; }
+		set
+		{
+			m_numAirJumps = value;
+		}
 	}
 
 	#endregion // Properties
