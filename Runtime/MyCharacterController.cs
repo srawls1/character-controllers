@@ -75,6 +75,8 @@ public class MyCharacterController : MonoBehaviour
 
 	private int animIDForwardSpeed;
 	private int animIDStrafeSpeed;
+	private int animIDUnsignedForwardSpeed;
+	private int animIDUnsignedStrafeSpeed;
 	private int animIDGrounded;
 	private int animIDJump;
 	private int animIDFreeFall;
@@ -237,6 +239,8 @@ public class MyCharacterController : MonoBehaviour
 	{
 		animIDForwardSpeed = Animator.StringToHash("ForwardSpeed");
 		animIDStrafeSpeed = Animator.StringToHash("StrafeSpeed");
+		animIDUnsignedForwardSpeed = Animator.StringToHash("UnsignedForwardSpeed");
+		animIDUnsignedStrafeSpeed = Animator.StringToHash("UnsignedStrafeSpeed");
 		animIDGrounded = Animator.StringToHash("Grounded");
 		animIDJump = Animator.StringToHash("Jump");
 		animIDFreeFall = Animator.StringToHash("FreeFall");
@@ -373,8 +377,12 @@ public class MyCharacterController : MonoBehaviour
 
 		horizontalVelocity = currentVelocity;
 
-		animator.SetFloat(animIDForwardSpeed, Vector3.Dot(currentVelocity, transform.forward) / maxSpeed);
-		animator.SetFloat(animIDStrafeSpeed, Vector3.Dot(currentVelocity, transform.right) / maxStrafeSpeed);
+		float forwardSpeed = Vector3.Dot(currentVelocity, transform.forward) / maxSpeed;
+		float strafeSpeed = Vector3.Dot(currentVelocity, transform.right) / maxStrafeSpeed;
+		animator.SetFloat(animIDForwardSpeed, forwardSpeed);
+		animator.SetFloat(animIDStrafeSpeed, strafeSpeed);
+		animator.SetFloat(animIDUnsignedForwardSpeed, Mathf.Abs(forwardSpeed));
+		animator.SetFloat(animIDUnsignedStrafeSpeed, Mathf.Abs(strafeSpeed));
 	}
 
 	private void DoAJump(float speed)
