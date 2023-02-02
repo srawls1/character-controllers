@@ -1,15 +1,23 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public abstract class PlayerInputProxy : MonoBehaviour
 {
-    [SerializeField] protected float jumpBufferTime;
+	#region Editor Fields
 
-    protected bool jumpPressed;
+	[SerializeField] protected float jumpBufferTime;
+
+	#endregion // Editor Fields
+
+	#region Private Fields
+
+	protected bool jumpPressed;
     protected float jumpBufferTimeDelta;
 
-    private void Start()
+	#endregion // Private Fields
+
+	#region Unity Functions
+
+	protected void Start()
     {
         jumpBufferTimeDelta = jumpBufferTime;
         jumpPressed = false;
@@ -32,7 +40,11 @@ public abstract class PlayerInputProxy : MonoBehaviour
 		}
     }
 
-    public bool Jump()
+	#endregion // Unity Functions
+
+	#region Public Functions
+
+	public bool Jump()
 	{
         return jumpPressed;
     }
@@ -42,7 +54,13 @@ public abstract class PlayerInputProxy : MonoBehaviour
         jumpPressed = false;
 	}
 
-    public abstract bool JumpHeld();
+	#endregion // Public Functions
+
+	#region Abstract Functions
+
+	public abstract bool JumpHeld();
     public abstract Vector2 Movement();
     public abstract Vector2 Look();
+
+	#endregion // Abstract Functions
 }

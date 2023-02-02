@@ -16,15 +16,25 @@ public class StandardPlayerInputProxy : PlayerInputProxy
 
 	public override Vector2 Look()
 	{
-		return new Vector2(Input.GetAxisRaw(lookHorizontalAxisName), Input.GetAxisRaw(lookVerticalAxisName));
+		return GetVectorValue(lookHorizontalAxisName, lookVerticalAxisName);
 	}
 
 	public override Vector2 Movement()
 	{
-		return new Vector2(Input.GetAxisRaw(horizontalAxisName), Input.GetAxisRaw(verticalAxisName));
+		return GetVectorValue(horizontalAxisName, verticalAxisName);
 	}
 
-	new private void Update()
+	protected float GetAxisValue(string axisName)
+	{
+		return Input.GetAxisRaw(axisName);
+	}
+
+	protected Vector2 GetVectorValue(string xAxis, string yAxis)
+	{
+		return new Vector2(GetAxisValue(xAxis), GetAxisValue(yAxis));
+	}
+
+	new protected void Update()
 	{
 		base.Update();
 		if (!jumpPressed)
