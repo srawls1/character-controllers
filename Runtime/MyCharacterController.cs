@@ -8,7 +8,7 @@ public class MyCharacterController : MonoBehaviour
 	#region Editor Fields
 
 	[Header("Movement")]
-	[SerializeField] private float maxSpeed = 6f;
+	[SerializeField] private float m_maxSpeed = 6f;
 	[SerializeField] private float maxStrafeSpeed = 4f;
 	[SerializeField] private float maxBackupSpeed = 3f;
 	[SerializeField] private float timeToFullSpeed = 0.2f;
@@ -179,6 +179,21 @@ public class MyCharacterController : MonoBehaviour
 	public float targetRotation
 	{
 		get; set;
+	}
+
+	public float maxSpeed
+	{
+		get { return m_maxSpeed; }
+		set
+		{
+			m_maxSpeed = value;
+			groundAcceleration = maxSpeed / timeToFullSpeed;
+			groundDeceleration = maxSpeed / timeToStop;
+			groundOrthogonalAcceleration = maxSpeed / orthogonalAccelerationTime;
+			airAcceleration = maxSpeed / midairTimeToFullSpeed;
+			airDeceleration = maxSpeed / midairTimeToStop;
+			airOrthogonalAcceleration = maxSpeed / midairOrthogonalAccelerationTime;
+		}
 	}
 
 	public int numAirJumps
