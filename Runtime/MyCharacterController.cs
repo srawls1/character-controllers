@@ -7,6 +7,8 @@ public class MyCharacterController : MonoBehaviour
 {
 	#region Editor Fields
 
+	[SerializeField] private Camera m_camera;
+
 	[Header("Movement")]
 	[SerializeField] private float m_maxSpeed = 6f;
 	[SerializeField] private float maxStrafeSpeed = 4f;
@@ -86,7 +88,6 @@ public class MyCharacterController : MonoBehaviour
 	private Animator animator;
 	private CharacterMover mover;
 	private GroundChecker groundChecker;
-	private GameObject mainCamera;
 
 	#endregion // Private Fields
 
@@ -205,6 +206,15 @@ public class MyCharacterController : MonoBehaviour
 		}
 	}
 
+	new public Camera camera
+	{
+		get { return m_camera; }
+		set
+		{
+			m_camera = value;
+		}
+	}
+
 	#endregion // Properties
 
 	#region Unity Functions
@@ -247,7 +257,6 @@ public class MyCharacterController : MonoBehaviour
 		mover = GetComponent<CharacterMover>();
 		groundChecker = GetComponent<GroundChecker>();
 		relativeTime = GetComponent<RelativeTime>();
-		mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
 	}
 
 	private void AssignAnimationIDs()
@@ -427,7 +436,8 @@ public class MyCharacterController : MonoBehaviour
 			input.Normalize();
 		}
 
-		Vector3 cameraRight = mainCamera.transform.right;
+		Camera cam = camera ?? Camera.main;
+		Vector3 cameraRight = cam != null ? cam.transform.right : Vector3.right;
 		Vector3 cameraForward = Vector3.Cross(cameraRight, Vector3.up);
 		Vector3 input3D = (cameraRight * input.x) + (cameraForward * input.y);
 
