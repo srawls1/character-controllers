@@ -5,13 +5,22 @@ public class TwinStickRotationController : MonoBehaviour
 	[SerializeField] private float deadzone = 0.5f;
     [SerializeField] private float aimRange = 20f;
     [SerializeField] private float maxCorrectionAngle = 30f;
+    [SerializeField] private Camera m_camera;
 
     private float sqrDeadzone;
 
     private PlayerInputProxy inputProxy;
     private MyCharacterController characterController;
     private AimAssist aimAssist;
-    private Transform mainCamera;
+
+    new public Camera camera
+	{
+        get { return m_camera; }
+        set
+		{
+            m_camera = value;
+		}
+	}
 
 	private void Awake()
     {
@@ -20,7 +29,6 @@ public class TwinStickRotationController : MonoBehaviour
         inputProxy = GetComponent<PlayerInputProxy>();
 		characterController = GetComponent<MyCharacterController>();
         aimAssist = GetComponent<AimAssist>();
-        mainCamera = GameObject.FindGameObjectWithTag("MainCamera").transform;
 	}
 
 	void Update()
@@ -31,7 +39,8 @@ public class TwinStickRotationController : MonoBehaviour
             return;
 		}
 
-        Vector3 cameraRight = mainCamera.right;
+        Camera cam = camera ?? Camera.main;
+        Vector3 cameraRight = cam != null ? cam.transform.right : Vector3.right;
         Vector3 cameraForward = Vector3.Cross(cameraRight, Vector3.up);
         Vector3 inputDirection =  (lookInput.x * cameraRight) + (lookInput.y * cameraForward);
         float inputRotation = Mathf.Atan2(inputDirection.x, inputDirection.z) * Mathf.Rad2Deg;
