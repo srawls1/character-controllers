@@ -401,8 +401,10 @@ public class MyCharacterController : MonoBehaviour
 
 		horizontalVelocity = currentVelocity;
 
-		float forwardSpeed = Vector3.Dot(currentVelocity, transform.forward) / maxSpeed;
-		float strafeSpeed = Vector3.Dot(currentVelocity, transform.right) / maxStrafeSpeed;
+		Vector2 transformForward = new Vector2(transform.forward.x, transform.forward.z);
+		Vector2 transformRight = new Vector2(transform.right.x, transform.right.z);
+		float forwardSpeed = Vector3.Dot(currentVelocity, transformForward) / maxSpeed;
+		float strafeSpeed = Vector3.Dot(currentVelocity, transformRight) / maxStrafeSpeed;
 		animator.SetFloat(animIDForwardSpeed, forwardSpeed);
 		animator.SetFloat(animIDStrafeSpeed, strafeSpeed);
 		animator.SetFloat(animIDUnsignedForwardSpeed, Mathf.Abs(forwardSpeed));
