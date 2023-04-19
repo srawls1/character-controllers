@@ -16,7 +16,11 @@ public abstract class Targetable : MonoBehaviour
 
 	private void OnDisable()
 	{
-		TargetableRegistry.instance.UnregisterTargetable(this);
+		TargetableRegistry registry = TargetableRegistry.instance;
+		if (registry)
+		{
+			TargetableRegistry.instance.UnregisterTargetable(this);
+		}
 	}
 
 	public abstract Vector2 GetLocation();
