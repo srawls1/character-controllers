@@ -15,6 +15,16 @@ public class GroundChecker2D : MonoBehaviour, GroundChecker
         return Physics2D.OverlapCircle(circlePosition, groundedRadius, groundLayers) != null;
 	}
 
+	public void AddLayer(string layer)
+	{
+		groundLayers.value |= LayerMask.GetMask(layer);
+	}
+
+	public void RemoveLayer(string layer)
+	{
+		groundLayers.value &= ~LayerMask.GetMask(layer);
+	}
+
 	private void OnDrawGizmosSelected()
 	{
 		Color transparentGreen = new Color(0.0f, 1.0f, 0.0f, 0.35f);
