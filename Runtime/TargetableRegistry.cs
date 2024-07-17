@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public class TargetableRegistry : Singleton<TargetableRegistry>
@@ -30,9 +29,20 @@ public class TargetableRegistry : Singleton<TargetableRegistry>
 
 	public List<Targetable> GetTargetablesWithinBounds(Rect bounds)
 	{
-		return targetables
-			.Where((target) => bounds.Contains(target.GetLocation()))
-			.ToList();
+		List<Targetable> results = new List<Targetable>();
+		GetTargetablesWithinBounds(bounds, results);
+		return results;
+	}
+
+	public void GetTargetablesWithinBounds(Rect bounds, List<Targetable> results)
+	{
+		for (int i = 0; i < targetables.Count; ++i)
+		{
+			if (bounds.Contains(targetables[i].GetLocation()))
+			{
+				results.Add(targetables[i]);
+			}
+		}
 	}
 
 	private void OnDrawGizmosSelected()
