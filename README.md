@@ -4,9 +4,9 @@ A good, reusable character controller for 2D or 3D games.
 Your player character game object should contain:
 * a MyCharacterController component (there are MyCharacterController2D and MyCharacterController3D versions as shortcuts to add the other necessary components),
 * and a subclass of PlayerInputProxy
-* * There are implementations of PlayerInputProxy for standard Unity input (StandardPlayerInputProxy) and for Rewired (RewiredInputProxy)
-* * In order to use Rewired, you must go to Project Settings > Player > Script Compilation > Scripting Define Symbols, and add 'REWIRED' to the list.
-* * You can extend any of the existing PlayerInputProxy classes to support a different input system or to add more input actions specific to your game.
+  * There are implementations of PlayerInputProxy for standard Unity input (StandardPlayerInputProxy) and for Rewired (RewiredInputProxy)
+  * In order to use Rewired, you must go to Project Settings > Player > Script Compilation > Scripting Define Symbols, and add 'REWIRED' to the list.
+  * You can extend any of the existing PlayerInputProxy classes to support a different input system or to add more input actions specific to your game.
 There are three properties under the subheading 'Swizzling': Horizontal Axis 1, Horizontal Axis 2, and Vertical Axis.
 * For a sidescrolling game, you want Horizontal Axis 1 = X, Horizontal Axis 2 = None, and Vertical Axis = Y
 * For a top-down 2D game, you want Horizontal Axis 1 = X, Horizontal Axis 2 = Y, and Vertical Axis = None (assuming you are using the Y axis in engine for north-south)
