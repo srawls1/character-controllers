@@ -3,16 +3,16 @@ using UnityEngine;
 #if !ENABLE_INPUT_SYSTEM
 public class StandardPlayerInputProxy : PlayerInputProxy
 {
-	[SerializeField] private string jumpAxisName = "Jump";
+	#region Editor Fields
+
 	[SerializeField] private string horizontalAxisName = "Horizontal";
 	[SerializeField] private string verticalAxisName = "Vertical";
 	[SerializeField] private string lookHorizontalAxisName = "LookHorizontal";
 	[SerializeField] private string lookVerticalAxisName = "LookVertical";
 
-	public override bool JumpHeld()
-	{
-		return Input.GetButton(jumpAxisName);
-	}
+	#endregion // Editor Fields
+
+	#region Public Functions
 
 	public override Vector2 Look()
 	{
@@ -24,6 +24,10 @@ public class StandardPlayerInputProxy : PlayerInputProxy
 		return GetVectorValue(horizontalAxisName, verticalAxisName);
 	}
 
+	#endregion // Public Functions
+
+	#region Private Functions
+
 	protected float GetAxisValue(string axisName)
 	{
 		return Input.GetAxisRaw(axisName);
@@ -34,14 +38,22 @@ public class StandardPlayerInputProxy : PlayerInputProxy
 		return new Vector2(GetAxisValue(xAxis), GetAxisValue(yAxis));
 	}
 
-	new protected void Update()
+	protected override bool ButtonDown(string buttonName)
 	{
-		base.Update();
-		if (!jumpPressed)
-		{
-            jumpPressed = Input.GetButtonDown(jumpAxisName);
-		}
+		return Input.GetButtonDown(buttonName);
 	}
+
+	protected override bool ButtonHeld(string buttonName)
+	{
+		return Input.GetButton(buttonName);
+	}
+
+	protected override bool ButtonReleased(string buttonName)
+	{
+		return Input.GetButtonUp(buttonName);
+	}
+
+	#endregion // Private Functions
 }
 
 #endif

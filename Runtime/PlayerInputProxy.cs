@@ -4,7 +4,8 @@ public abstract class PlayerInputProxy : MonoBehaviour
 {
 	#region Editor Fields
 
-	[SerializeField] protected float jumpBufferTime;
+	[SerializeField] protected float inputBufferTime = 0.1f;
+	[SerializeField] private string jumpAxisName = "Jump";
 
 	#endregion // Editor Fields
 
@@ -19,25 +20,13 @@ public abstract class PlayerInputProxy : MonoBehaviour
 
 	protected void Start()
     {
-        jumpBufferTimeDelta = jumpBufferTime;
+        jumpBufferTimeDelta = inputBufferTime;
         jumpPressed = false;
     }
 
     protected void Update()
     {
-        if (jumpPressed)
-        {
-            jumpBufferTimeDelta -= Time.deltaTime;
-            if (jumpBufferTimeDelta <= 0f)
-            {
-                jumpBufferTimeDelta = 0f;
-                jumpPressed = false;
-            }
-        }
-        else
-		{
-            jumpBufferTimeDelta = jumpBufferTime;
-		}
+		UpdateButtonValue(jumpAxisName, ref jumpPressed, ref jumpBufferTimeDelta);
     }
 
 	#endregion // Unity Functions
@@ -49,6 +38,11 @@ public abstract class PlayerInputProxy : MonoBehaviour
         return jumpPressed;
     }
 
+	public bool JumpHeld()
+	{
+		return ButtonHeld(jumpAxisName);
+	}
+
     public void ResetJump()
 	{
         jumpPressed = false;
@@ -58,9 +52,30 @@ public abstract class PlayerInputProxy : MonoBehaviour
 
 	#region Abstract Functions
 
-	public abstract bool JumpHeld();
     public abstract Vector2 Movement();
     public abstract Vector2 Look();
+
+	protected abstract bool ButtonDown(string buttonName);
+    protected abstract bool ButtonHeld(string buttonName);
+    protected abstract bool ButtonReleased(string buttonName);
+
+	protected void UpdateButtonValue(string buttonName, ref bool pressed, ref float bufferTimeDelta)
+	{
+		if (pressed)
+		{
+			bufferTimeDelta -= Time.deltaTime;
+			if (bufferTimeDelta <= 0f)
+			{
+				bufferTimeDelta = 0f;
+				pressed = false;
+			}
+		}
+		else
+		{
+			bufferTimeDelta = inputBufferTime;
+			pressed = ButtonDown(buttonName);
+		}
+	}
 
 	#endregion // Abstract Functions
 }

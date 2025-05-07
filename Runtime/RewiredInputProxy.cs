@@ -1,26 +1,31 @@
+#if REWIRED
+
 using UnityEngine;
 using Rewired;
 
+// Note: This file is surrounded in an 'if' preprocessor to prevent it from breaking your
+// compilation if you are not using Rewired for your input. If you wish to use rewired,
+// go to Project Settings > Player > Script Compilation > Scripting Define Symbols, and
+// add 'REWIRED' to the list. Be sure to click 'Apply'.
+
 public class RewiredInputProxy : PlayerInputProxy
 {
-	#region Editor Fields
+#region Editor Fields
 
 	[SerializeField] private string horizontalAxisName = "Horizontal";
 	[SerializeField] private string verticalAxisName = "Vertical";
 	[SerializeField] private string horizontalLookAxisName = "HorizontalLook";
 	[SerializeField] private string verticalLookAxisName = "VerticalLook";
-	[SerializeField] private string jumpAxisName = "Jump";
-	[SerializeField] private float inputBufferTime = 0.1f;
 
-	#endregion // Editor Fields
+#endregion // Editor Fields
 
-	#region Properties
+#region Properties
 
 	public Player player { get; set; }
 
-	#endregion // Properties
+#endregion // Properties
 
-	#region Unity Functions
+#region Unity Functions
 
 	new protected void Start()
 	{
@@ -32,28 +37,9 @@ public class RewiredInputProxy : PlayerInputProxy
 		}
 	}
 
-	new protected void Update()
-	{
-		if (player == null)
-		{
-			return;
-		}
+#endregion // Unity Functions
 
-		UpdateButtonValue(jumpAxisName, ref jumpPressed, ref jumpBufferTimeDelta);
-	}
-
-	#endregion // Unity Functions
-
-	#region Public Functions
-
-	public override bool JumpHeld()
-	{
-		if (player == null)
-		{
-			return false;
-		}
-		return player.GetButton(jumpAxisName);
-	}
+#region Public Functions
 
 	public override Vector2 Movement()
 	{
@@ -75,27 +61,26 @@ public class RewiredInputProxy : PlayerInputProxy
 		return player.GetAxis2DRaw(horizontalLookAxisName, verticalLookAxisName);
 	}
 
-	#endregion // Public Functions
+#endregion // Public Functions
 
-	#region Private Functions
+#region Private Functions
 
-	protected void UpdateButtonValue(string axisName, ref bool pressed, ref float bufferTimeDelta)
+	protected override bool ButtonDown(string buttonName)
 	{
-		if (pressed)
-		{
-			bufferTimeDelta -= Time.deltaTime;
-			if (bufferTimeDelta <= 0f)
-			{
-				bufferTimeDelta = 0f;
-				pressed = false;
-			}
-		}
-		else
-		{
-			bufferTimeDelta = inputBufferTime;
-			pressed = player.GetButtonDown(axisName);
-		}
+		return player.GetButtonDown(buttonName);
 	}
 
-	#endregion // Private Functions
+	protected override bool ButtonHeld(string buttonName)
+	{
+		return player.GetButton(buttonName);
+	}
+
+	protected override bool ButtonReleased(string buttonName)
+	{
+		return player.GetButtonUp(buttonName);
+	}
+
+#endregion // Private Functions
 }
+
+#endif
